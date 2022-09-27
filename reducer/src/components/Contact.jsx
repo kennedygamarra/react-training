@@ -1,28 +1,21 @@
+import { useEffect } from "react";
 import { useReducer } from "react";
 import { ContactsReducer } from "../reducers/ContactsReducer";
 import ContactTable from "./ContactTable";
 import FormAdd from "./FormAdd";
 
-const contacts = [
-  {
-    id: "1-1",
-    name: "Juan",
-    phone: "123456789",
-  },
-  {
-    id: "2-2",
-    name: "Pedro",
-    phone: "987654321",
-  },
-  {
-    id: "3-3",
-    name: "Maria",
-    phone: "123456789",
-  },
-];
-const Contact = () => {
-  const [state, dispatch] = useReducer(ContactsReducer, contacts);
+const init = () => {
+  const contacts = localStorage.getItem("contacts");
 
+  return contacts ? JSON.parse(contacts) : [];
+}
+const Contact = () => {
+  const [state, dispatch] = useReducer(ContactsReducer,[],init);
+
+  useEffect(() => {
+    localStorage.setItem("contacts", JSON.stringify(state));
+  }, [state])
+  
   return (
     <div className="container mt-3">
       <FormAdd dispatch={dispatch} />
